@@ -55,7 +55,8 @@
 }
 
 
-.form {
+.form,
+.low {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -84,7 +85,7 @@
 }
 
 /* ===== BUTTON ===== */
-.form button {
+.btn {
     background-color: #4e75ff;
     color: #fff;
     font-size: 14px;
@@ -97,11 +98,11 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.form button:hover {
+.btn:hover {
     background-color: #3c63e6;
     transform: translateY(-1px);
 }
 
-.form button:active {
+.btn:active {
     transform: translateY(0);
 }

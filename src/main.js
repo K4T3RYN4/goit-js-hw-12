@@ -1,6 +1,3 @@
-import iziToast from "izitoast";
-import "izitoast/dist/css/iziToast.min.css";
-
 import { getImagesByQuery } from './js/pixabay-api.js';
 
 import {
@@ -8,39 +5,73 @@ import {
     clearGallery,
     showLoader,
     hideLoader,
+    showLoadMoreButton,
+    hideLoadMoreButton,
+    showError,
+    loadBtn,
 } from './js/render-functions.js';
 
 const searchInput = document.querySelector("#searchInput")
 const searchBtn = document.querySelector("#searchBtn")
 
-searchBtn.addEventListener('click', (e) => {
+let page = 1
+
+searchBtn.addEventListener('click', async (e) => {
     e.preventDefault()
 
     if (!searchInput.value.trim()) {
-        return iziToast.error({
-            position: 'topRight',
-            message: 'Sorry, you have to write something in order to find something! :) Please try again!',
-        });
+        return showError('Please enter a search query!')
     }
 
     clearGallery()
+    showLoader()
+
+    try {
+        const { hits, totalHits } = await getImagesByQuery(searchInput.value, page)
+
+        if (!hits || hits.length === 0) {
+            hideLoadMoreButton()
+            return showError('Sorry, there are no images matching your search query. Please try again!')
+        };
+        createGallery(hits, 'afterbegin')
+
+        if (hits.length <= totalHits) {
+            showLoadMoreButton()
+        } else {
+            hideLoadMoreButton()
+            return showError('We are sorry but you have reached the end of search results.')
+        }
+    } catch (err) {
+        console.log(err.message);
+    }
+    finally {
+        hideLoader()
+    }
+})
+
+loadBtn.addEventListener('click', async (e) => {
+    e.preventDefault()
 
     showLoader()
 
-    getImagesByQuery(searchInput.value)
-        .then(hits => {
-            if (!hits || hits.length === 0) {
-                return iziToast.error({
-                    position: 'topRight',
-                    message: 'Sorry, there are no images matching your search query. Please try again!',
-                });
-            };
-            createGallery(hits)
-        })
-        .catch(err => {
-            console.log(err.message);
-        })
-        .finally(() => {
-            hideLoader()
-        })
+    try {
+        const { hits, totalHits } = await getImagesByQuery(searchInput.value, page += 1)
+
+        createGallery(hits, 'beforeend')
+
+        const firstCard = gallery.querySelector('.gall-item');
+        if (firstCard) {
+            const cardHeight = firstCard.getBoundingClientRect().height;
+            window.scrollBy({
+                top: cardHeight * 2,
+                behavior: 'smooth'
+            });
+        }
+
+    } catch (err) {
+        console.log(err.message);
+    }
+    finally {
+        hideLoader()
+    }
 })

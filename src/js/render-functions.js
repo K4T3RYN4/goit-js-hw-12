@@ -1,6 +1,10 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
+
+
 let sl = new SimpleLightbox('.gallery a', {
     sourceAttr: 'href',
     overlay: true,
@@ -19,11 +23,12 @@ let sl = new SimpleLightbox('.gallery a', {
 
 const loader = document.querySelector('#loader')
 const gallery = document.querySelector('.gallery');
+const loadBtn = document.querySelector("#loadBtn")
 
 
 
-function createGallery(images) {
-    gallery.insertAdjacentHTML('afterbegin', createCardsMarkup(images));
+function createGallery(images, position) {
+    gallery.insertAdjacentHTML(position, createCardsMarkup(images));
     sl.refresh();
 }
 
@@ -39,11 +44,19 @@ function hideLoader() {
     loader.classList.add('visually-hidden')
 }
 
-export { createGallery, clearGallery, showLoader, hideLoader };
+function showLoadMoreButton() {
+    loadBtn.classList.remove('visually-hidden')
+}
+
+function hideLoadMoreButton() {
+    loadBtn.classList.add('visually-hidden')
+}
+
+export { createGallery, clearGallery, showLoader, hideLoader, showLoadMoreButton, hideLoadMoreButton, loadBtn, showError };
 
 
-function createCardsMarkup(arr) {
-    return arr.map(({ largeImageURL, webformatURL, tags, likes, views, comments, downloads }) => `
+function createCardsMarkup(array) {
+    return array.map(({ largeImageURL, webformatURL, tags, likes, views, comments, downloads }) => `
     <li class="gall-item">
         <a class="gall-pic" href="${largeImageURL}">
             <img
@@ -61,4 +74,12 @@ function createCardsMarkup(arr) {
             <li class="gall-descr-item">Downloads: ${downloads}</li>
         </ul>
     </li>`).join('\n')
+}
+
+
+function showError(message) {
+    iziToast.error({
+        position: 'topRight',
+        message,
+    });
 }
