@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HW11</title>
+    <title>HW12</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/3.0.1/modern-normalize.min.css"
@@ -15,9 +15,9 @@
       rel="stylesheet"
     />
     <script type="module" crossorigin src="/goit-js-hw-11/index.js"></script>
-    <link rel="modulepreload" crossorigin href="/goit-js-hw-11/assets/vendor-BSTwZ_tR.js">
-    <link rel="stylesheet" crossorigin href="/goit-js-hw-11/assets/vendor-DumFYO8Z.css">
-    <link rel="stylesheet" crossorigin href="/goit-js-hw-11/assets/index-D3uFdAZg.css">
+    <link rel="modulepreload" crossorigin href="/goit-js-hw-11/assets/vendor-BNibzuFn.js">
+    <link rel="stylesheet" crossorigin href="/goit-js-hw-11/assets/vendor-CWKLx11g.css">
+    <link rel="stylesheet" crossorigin href="/goit-js-hw-11/assets/index-Bpwm5lGa.css">
   </head>
   <body>
     <main>
@@ -31,12 +31,17 @@
             required
           />
         </label>
-        <button type="submit" id="searchBtn">Search</button>
+        <button type="submit" id="searchBtn" class="btn">Search</button>
       </form>
 
-      <span id="loader" class="loader visually-hidden"></span>
+      <div class="gallery-wrapper">
+        <span id="loader" class="loader visually-hidden"></span>
+        <ul class="gallery" id="gallery"></ul>
 
-      <ul class="gallery" id="gallery"></ul>
+        <button type="submit" id="loadBtn" class="btn low visually-hidden">
+          Load more
+        </button>
+      </div>
     </main>
 
   </body>
