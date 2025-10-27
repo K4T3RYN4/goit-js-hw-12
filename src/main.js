@@ -9,18 +9,20 @@ import {
     hideLoadMoreButton,
     showError,
     loadBtn,
-    gallery
+    gallery,
+    showMessage
 } from './js/render-functions.js';
 
 const searchInput = document.querySelector("#searchInput")
-const searchBtn = document.querySelector("#searchBtn")
+const form = document.querySelector('#form')
+// const searchBtn = document.querySelector("#searchBtn")
 
 let page = 1
 let currentQuery = ''
 let totalLoaded = 0
 let totalHits = 0
 
-searchBtn.addEventListener('click', async (e) => {
+form.addEventListener('submit', async (e) => {
     e.preventDefault()
 
     currentQuery = searchInput.value.trim()
@@ -37,13 +39,15 @@ searchBtn.addEventListener('click', async (e) => {
     showLoader()
 
     try {
-        const { hits, totalHits } = await getImagesByQuery(currentQuery, page)
+        const { hits, totalHits: fetchedTotalHits } = await getImagesByQuery(currentQuery, page)
+
+        totalHits = fetchedTotalHits;
 
         if (!hits || hits.length === 0) {
             hideLoadMoreButton()
             return showError('Sorry, there are no images matching your search query. Please try again!')
         };
-        createGallery(hits, 'afterbegin')
+        createGallery(hits)
 
         totalLoaded = hits.length
 
@@ -67,17 +71,20 @@ loadBtn.addEventListener('click', async (e) => {
     showLoader()
 
     try {
-        const { hits, totalHits } = await getImagesByQuery(currentQuery, page += 1)
+        page += 1
+
+        const { hits, totalHits } = await getImagesByQuery(currentQuery, page)
 
         totalLoaded += hits.length
 
-        createGallery(hits, 'beforeend')
+        createGallery(hits)
 
         if (totalLoaded < totalHits) {
             showLoadMoreButton()
         } else {
             hideLoadMoreButton()
-            showError('We are sorry, but you have reached the end of search results.')
+            showMessage('We are sorry, but you have reached the end of search results.')
+
         }
 
         const firstCard = gallery.querySelector('.gall-item');

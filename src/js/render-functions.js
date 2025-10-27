@@ -27,8 +27,8 @@ const loadBtn = document.querySelector("#loadBtn")
 
 
 
-function createGallery(images, position) {
-    gallery.insertAdjacentHTML(position, createCardsMarkup(images));
+function createGallery(images) {
+    gallery.insertAdjacentHTML('beforeend', createCardsMarkup(images));
     sl.refresh();
 }
 
@@ -52,7 +52,7 @@ function hideLoadMoreButton() {
     loadBtn.classList.add('visually-hidden')
 }
 
-export { createGallery, clearGallery, showLoader, hideLoader, showLoadMoreButton, hideLoadMoreButton, loadBtn, showError, gallery };
+export { createGallery, clearGallery, showLoader, hideLoader, showLoadMoreButton, hideLoadMoreButton, loadBtn, showError, gallery, showMessage };
 
 
 function createCardsMarkup(array) {
@@ -79,6 +79,13 @@ function createCardsMarkup(array) {
 
 function showError(message) {
     iziToast.error({
+        position: 'topRight',
+        message,
+    });
+}
+
+function showMessage(message) {
+    iziToast.info({
         position: 'topRight',
         message,
     });
