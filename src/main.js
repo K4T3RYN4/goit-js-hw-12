@@ -9,25 +9,35 @@ import {
     hideLoadMoreButton,
     showError,
     loadBtn,
+    gallery
 } from './js/render-functions.js';
 
 const searchInput = document.querySelector("#searchInput")
 const searchBtn = document.querySelector("#searchBtn")
 
 let page = 1
+let currentQuery = ''
+let totalLoaded = 0
+let totalHits = 0
 
 searchBtn.addEventListener('click', async (e) => {
     e.preventDefault()
 
-    if (!searchInput.value.trim()) {
+    currentQuery = searchInput.value.trim()
+
+    if (!currentQuery) {
         return showError('Please enter a search query!')
     }
 
+    page = 1
+    totalLoaded = 0
+
     clearGallery()
+    hideLoadMoreButton()
     showLoader()
 
     try {
-        const { hits, totalHits } = await getImagesByQuery(searchInput.value, page)
+        const { hits, totalHits } = await getImagesByQuery(currentQuery, page)
 
         if (!hits || hits.length === 0) {
             hideLoadMoreButton()
@@ -35,12 +45,14 @@ searchBtn.addEventListener('click', async (e) => {
         };
         createGallery(hits, 'afterbegin')
 
-        if (hits.length <= totalHits) {
+        totalLoaded = hits.length
+
+        if (totalLoaded < totalHits) {
             showLoadMoreButton()
         } else {
             hideLoadMoreButton()
-            return showError('We are sorry but you have reached the end of search results.')
         }
+
     } catch (err) {
         console.log(err.message);
     }
@@ -55,9 +67,18 @@ loadBtn.addEventListener('click', async (e) => {
     showLoader()
 
     try {
-        const { hits, totalHits } = await getImagesByQuery(searchInput.value, page += 1)
+        const { hits, totalHits } = await getImagesByQuery(currentQuery, page += 1)
+
+        totalLoaded += hits.length
 
         createGallery(hits, 'beforeend')
+
+        if (totalLoaded < totalHits) {
+            showLoadMoreButton()
+        } else {
+            hideLoadMoreButton()
+            showError('We are sorry, but you have reached the end of search results.')
+        }
 
         const firstCard = gallery.querySelector('.gall-item');
         if (firstCard) {

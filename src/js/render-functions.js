@@ -52,7 +52,7 @@ function hideLoadMoreButton() {
     loadBtn.classList.add('visually-hidden')
 }
 
-export { createGallery, clearGallery, showLoader, hideLoader, showLoadMoreButton, hideLoadMoreButton, loadBtn, showError };
+export { createGallery, clearGallery, showLoader, hideLoader, showLoadMoreButton, hideLoadMoreButton, loadBtn, showError, gallery };
 
 
 function createCardsMarkup(array) {
