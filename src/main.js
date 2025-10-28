@@ -15,7 +15,6 @@ import {
 
 const searchInput = document.querySelector("#searchInput")
 const form = document.querySelector('#form')
-// const searchBtn = document.querySelector("#searchBtn")
 
 let page = 1
 let currentQuery = ''
@@ -44,6 +43,7 @@ form.addEventListener('submit', async (e) => {
         totalHits = fetchedTotalHits;
 
         if (!hits || hits.length === 0) {
+            hideLoader()
             hideLoadMoreButton()
             return showError('Sorry, there are no images matching your search query. Please try again!')
         };
@@ -59,6 +59,7 @@ form.addEventListener('submit', async (e) => {
 
     } catch (err) {
         console.log(err.message);
+        showMessage('Ooops! Something went wrong... :(')
     }
     finally {
         hideLoader()
@@ -68,6 +69,7 @@ form.addEventListener('submit', async (e) => {
 loadBtn.addEventListener('click', async (e) => {
     e.preventDefault()
 
+    hideLoadMoreButton()
     showLoader()
 
     try {
@@ -98,6 +100,7 @@ loadBtn.addEventListener('click', async (e) => {
 
     } catch (err) {
         console.log(err.message);
+        showMessage('Ooops! Something went wrong... :(')
     }
     finally {
         hideLoader()
